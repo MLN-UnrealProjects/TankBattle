@@ -6,7 +6,7 @@
 
 ATank* ATankPlayerController::GetControlledTank() const
 {
-	return Cast<ATank>(GetPawn());
+	return static_cast<ATank*>(GetPawn());
 }
 
 void ATankPlayerController::BeginPlay()
