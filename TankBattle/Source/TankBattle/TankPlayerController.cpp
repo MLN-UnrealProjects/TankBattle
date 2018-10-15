@@ -5,7 +5,7 @@
 #include "Engine/World.h"
 ATank* ATankPlayerController::GetControlledTank() const
 {
-	return static_cast<ATank*>(GetPawn());
+	return Cast<ATank>(GetPawn());
 }
 
 void ATankPlayerController::Tick(float DeltaTime)
@@ -62,6 +62,5 @@ void ATankPlayerController::AimTowardsCrosshair()
 	if (GetSightRayHitLocation(HitLocation))
 	{
 		ControlledTank->AimAt(HitLocation);
-		//UE_LOG(LogTemp, Warning, TEXT("Crosshair world hit location: %s"), *(HitLocation.ToString()))
 	}
 }

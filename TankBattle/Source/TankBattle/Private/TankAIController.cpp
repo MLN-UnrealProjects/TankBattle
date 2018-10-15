@@ -7,11 +7,6 @@
 #include "GameFramework/Actor.h"
 
 
-ATank* ATankAIController::GetControlledTank() const
-{
-	return static_cast<ATank*>(GetPawn());
-}
-
 void ATankAIController::BeginPlay()
 {
 	Super::BeginPlay();
@@ -20,27 +15,15 @@ void ATankAIController::BeginPlay()
 void ATankAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	ATank* Player{ GetPlayerTank() };
+
+	ATank* Player{ (Cast<ATankPlayerController>(GetWorld()->GetFirstPlayerController()))->GetControlledTank() };
 	if (!Player)
 		return;
 
-	ATank* MyTank{ GetControlledTank() };
+	ATank* MyTank{ Cast<ATank>(GetPawn()) };
 	if (!MyTank)
 		return;
 
 	MyTank->AimAt(Player->GetActorLocation());
-}
-
-ATank * ATankAIController::GetPlayerTank() const
-{
-	APlayerController* Player{ GetWorld()->GetFirstPlayerController() };
-
-	if (!Player)
-		return nullptr;
-
-	ATankPlayerController* CastedController{ dynamic_cast<ATankPlayerController*>(Player) };
-	if (!CastedController)
-		return nullptr;
-
-	return CastedController->GetControlledTank();
+	MyTank->Fire();
 }

@@ -18,6 +18,6 @@ public:
 	void Rotate(float RelativeSpeed);
 	
 private:
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = "true"))
 	float MaxDegreesPerSecond = 25.0f;
 };

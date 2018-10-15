@@ -7,6 +7,7 @@
 #include "Engine/World.h"
 #include "Projectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "TankMovementComponent.h"
 
 void ATank::SetBarrelReference(UTankBarrel* BarrelToSet)
 {
@@ -26,10 +27,13 @@ void ATank::SetTurretReference(UTankTurret * TurretToSet)
 }
 void ATank::Fire()
 {
-	if (!Barrel)
+	double CurrentSeconds{ FPlatformTime::Seconds() };
+	bool IsReloaded{ CurrentSeconds - LastFireTime > ReloadTimeInSeconds };
+	if (!Barrel || !IsReloaded)
 	{
 		return;
 	}
+	LastFireTime = CurrentSeconds;
 	AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, Barrel->GetSocketTransform(FName{ "Projectile" }));
 	Projectile->Launch(LaunchSpeed);
 }

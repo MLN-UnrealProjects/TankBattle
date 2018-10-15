@@ -10,6 +10,7 @@ class UTankBarrel;
 class UTankTurret;
 class UTankAimingComponent;
 class AProjectile;
+class UTankMovementComponent;
 UCLASS()
 class TANKBATTLE_API ATank : public APawn
 {
@@ -27,6 +28,8 @@ public:
 protected:
 
 	UTankAimingComponent* TankAimingComponent = nullptr;
+	UPROPERTY(BlueprintReadOnly)
+	UTankMovementComponent* TankMovementComponent = nullptr;
 
 private:
 	// Sets default values for this pawn's properties
@@ -38,11 +41,16 @@ private:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UPROPERTY(EditAnywhere, Category = Firing, meta = (AllowPrivateAccess = "True"))
-	float LaunchSpeed = 100000.0f; //TODO: find sensible speed
-	
-	UPROPERTY(EditAnywhere, Category = Setup, meta = (AllowPrivateAccess = "True"))
-	TSubclassOf<AProjectile> ProjectileBlueprint = nullptr; //This is another way of saying UClass* ProjectileBlueprint, but instead of allowing any type of UClass it requests specifically a given type
+	UPROPERTY(EditDefaultsOnly, Category = Firing, meta = (AllowPrivateAccess = "True"))
+		float LaunchSpeed = 100000.0f; //TODO: find sensible speed
+
+	UPROPERTY(EditDefaultsOnly, Category = Setup, meta = (AllowPrivateAccess = "True"))
+		TSubclassOf<AProjectile> ProjectileBlueprint = nullptr; //This is another way of saying UClass* ProjectileBlueprint, but instead of allowing any type of UClass it requests specifically a given type
 
 	UTankBarrel* Barrel = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = Firing, meta = (AllowPrivateAccess = "True"))
+		float ReloadTimeInSeconds = 1.0f;
+
+	double LastFireTime = 0.0;
 };
