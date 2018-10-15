@@ -9,14 +9,17 @@
 class UTankBarrel;
 class UTankTurret;
 class UTankAimingComponent;
+class AProjectile;
 UCLASS()
 class TANKBATTLE_API ATank : public APawn
 {
 	GENERATED_BODY()
 
 public:
-
 	void AimAt(FVector HitLocation);
+
+	UFUNCTION(BlueprintCallable, Category = Firing)
+	void Fire();
 	UFUNCTION(BlueprintCallable, Category = Setup)
 	void SetBarrelReference(UTankBarrel* BarrelToSet);
 	UFUNCTION(BlueprintCallable, Category = Setup)
@@ -38,4 +41,8 @@ private:
 	UPROPERTY(EditAnywhere, Category = Firing, meta = (AllowPrivateAccess = "True"))
 	float LaunchSpeed = 100000.0f; //TODO: find sensible speed
 	
+	UPROPERTY(EditAnywhere, Category = Setup, meta = (AllowPrivateAccess = "True"))
+	TSubclassOf<AProjectile> ProjectileBlueprint = nullptr; //This is another way of saying UClass* ProjectileBlueprint, but instead of allowing any type of UClass it requests specifically a given type
+
+	UTankBarrel* Barrel = nullptr;
 };

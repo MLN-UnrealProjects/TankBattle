@@ -3,7 +3,6 @@
 #include "TankPlayerController.h"
 #include "Tank.h"
 #include "Engine/World.h"
-#include "DrawDebugHelpers.h"
 ATank* ATankPlayerController::GetControlledTank() const
 {
 	return static_cast<ATank*>(GetPawn());
@@ -50,15 +49,6 @@ bool ATankPlayerController::GetLookDirection(FVector2D ScreenLocation, FVector& 
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-	ATank* ControlledTank{ GetControlledTank() };
-	if (!ControlledTank)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Tank controlled: None"))
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Tank controlled: %s"), *(ControlledTank->GetName()))
-	}
 }
 void ATankPlayerController::AimTowardsCrosshair()
 {

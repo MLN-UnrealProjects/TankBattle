@@ -38,7 +38,7 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 
 void UTankAimingComponent::AimAt(FVector Location, float LaunchSpeed)
 {
-	if (!Barrel || !Turret)
+	if (!Barrel)
 	{
 		return;
 	}
@@ -52,8 +52,11 @@ void UTankAimingComponent::AimAt(FVector Location, float LaunchSpeed)
 }
 void UTankAimingComponent::MoveBarrelTowards(FVector DesiredDirection)
 {
-	//Convert direction to rotation
-	//set rotation to barrel so that socket Projectile has the desired direction
+	if (!Barrel || !Turret)
+	{
+		return;
+	}
+
 	auto BarrelRotator{ Barrel->GetForwardVector().Rotation() };
 	auto AimAsRotator{ DesiredDirection.Rotation() };
 	auto DeltaRotator = AimAsRotator - BarrelRotator;
