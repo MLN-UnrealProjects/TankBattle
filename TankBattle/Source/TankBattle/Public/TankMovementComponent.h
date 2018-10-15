@@ -18,13 +18,19 @@ class TANKBATTLE_API UTankMovementComponent : public UNavMovementComponent
 	
 public:
 	UFUNCTION(BlueprintCallable, Category = Input)
+	//Performs a forward movement
 	void IntendMoveForward(float Throw);
-	UFUNCTION(BlueprintCallable, Category = Input)
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	//Performs a clocwise turn
 	void IntendTurnClockwise(float Throw);
-	UFUNCTION(Category = Setup, BlueprintCallable)
+	UFUNCTION(Category = "Setup", BlueprintCallable)
+	//Initializes Tracks to use for Force application. No logic is performed by this component if one or both tracks are nullptr
 	void Initialize(UTankTrack* LeftTrack, UTankTrack* RightTrack);
 
 private:
+	//Called by pathfinding logic from aicontroller
+	virtual void RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed) override;
+
 	UTankTrack* LeftTrack = nullptr;
 	UTankTrack* RightTrack = nullptr;
 };

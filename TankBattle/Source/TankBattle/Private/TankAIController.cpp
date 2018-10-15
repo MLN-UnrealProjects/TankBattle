@@ -5,7 +5,7 @@
 #include "Engine/World.h"
 #include "TankPlayerController.h"
 #include "GameFramework/Actor.h"
-
+#include "Classes/Navigation/PathFollowingComponent.h"
 
 void ATankAIController::BeginPlay()
 {
@@ -23,6 +23,8 @@ void ATankAIController::Tick(float DeltaTime)
 	ATank* MyTank{ Cast<ATank>(GetPawn()) };
 	if (!MyTank)
 		return;
+
+	EPathFollowingRequestResult::Type Result{ MoveToActor(Player, AcceptanceRadius) };
 
 	MyTank->AimAt(Player->GetActorLocation());
 	MyTank->Fire();

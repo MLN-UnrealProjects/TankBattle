@@ -22,9 +22,15 @@ void UTankMovementComponent::IntendTurnClockwise(float Throw)
 
 void UTankMovementComponent::Initialize(UTankTrack * LeftTrack, UTankTrack * RightTrack)
 {
-	if (!LeftTrack || !RightTrack)
-		return;
-
 	this->LeftTrack = LeftTrack;
 	this->RightTrack = RightTrack;
+}
+
+void UTankMovementComponent::RequestDirectMove(const FVector & MoveVelocity, bool bForceMaxSpeed)
+{
+	auto TankForward{ GetOwner()->GetActorForwardVector().GetSafeNormal() };
+	auto ForwardIntention{ MoveVelocity.GetSafeNormal() };
+
+	IntendMoveForward(FVector::DotProduct(TankForward, ForwardIntention));
+	IntendTurnClockwise(FVector::CrossProduct(TankForward, ForwardIntention).Z);
 }

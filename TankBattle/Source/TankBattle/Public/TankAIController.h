@@ -17,4 +17,7 @@ class TANKBATTLE_API ATankAIController : public AAIController
 private:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
+
+	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = "true"))
+	float AcceptanceRadius = 3000.0f;
 };
