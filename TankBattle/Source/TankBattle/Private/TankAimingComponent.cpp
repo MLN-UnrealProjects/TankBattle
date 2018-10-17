@@ -2,39 +2,44 @@
 
 #include "TankAimingComponent.h"
 #include "TankBarrel.h"
-//#include "Components/ActorComponent.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
-//#include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
 #include "TankTurret.h"
 #include "Projectile.h"
 #include "Engine/World.h"
+#include "Engine/EngineBaseTypes.h"
+#include "Runtime/CoreUObject/Public/UObject/NoExportTypes.h"
 
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = false;
+	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
 }
 
+void UTankAimingComponent::BeginPlay()
+{
+	Super::BeginPlay();
 
+	LastFireTime = FPlatformTime::Seconds();
+}
+bool UTankAimingComponent::IsBarrelMoving() const
+{
+	if (!ensure(Barrel))
+		return false;
+	auto BarrelForward{ Barrel->GetForwardVector() };
+	return !(BarrelForward.Equals(AimDirection, 0.001f));
+}
 void UTankAimingComponent::Fire()
 {
-	if (!ensure(ProjectileBlueprint && Barrel))
+	if (!ensure(ProjectileBlueprint && Barrel) || CurrentFireState == EFiringState::Reloading)
 	{
 		return;
 	}
 
-	double CurrentSeconds{ FPlatformTime::Seconds() };
-	bool IsReloaded{ CurrentSeconds - LastFireTime > ReloadTimeInSeconds };
-	if (!IsReloaded)
-	{
-		return;
-	}
-
-	LastFireTime = CurrentSeconds;
+	LastFireTime = FPlatformTime::Seconds();
 
 	AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, Barrel->GetSocketTransform(FName{ "Projectile" }));
 	Projectile->Launch(LaunchSpeed);
@@ -60,6 +65,8 @@ void UTankAimingComponent::MoveBarrelTowards(FVector DesiredDirection)
 		return;
 	}
 
+	AimDirection = DesiredDirection;
+
 	auto BarrelRotator{ Barrel->GetForwardVector().Rotation() };
 	auto AimAsRotator{ DesiredDirection.Rotation() };
 	auto DeltaRotator = AimAsRotator - BarrelRotator;
@@ -81,4 +88,17 @@ void UTankAimingComponent::Initialize(UTankTurret * TurretToSet, UTankBarrel* Ba
 {
 	Turret = TurretToSet;
 	Barrel = BarrelToSet;
+}
+
+void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	UE_LOG(LogTemp, Warning, TEXT("%d , %d , %d"), FPlatformTime::Seconds(), LastFireTime, ReloadTimeInSeconds);
+
+	if (FPlatformTime::Seconds() - LastFireTime < ReloadTimeInSeconds)
+		CurrentFireState = EFiringState::Reloading;
+	else if (IsBarrelMoving())
+		CurrentFireState = EFiringState::Aiming;
+	else
+		CurrentFireState = EFiringState::Locked;
 }

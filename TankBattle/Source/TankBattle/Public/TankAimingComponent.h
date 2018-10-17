@@ -16,6 +16,7 @@ enum class EFiringState : uint8
 class UTankBarrel;
 class UTankTurret;
 class AProjectile;
+struct FActorComponentTickFunction;
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class TANKBATTLE_API UTankAimingComponent : public UActorComponent
@@ -31,7 +32,7 @@ public:
 protected:
 
 	UPROPERTY(BlueprintReadOnly , Category = "State")
-	EFiringState CurrentFireState = EFiringState::Locked;
+	EFiringState CurrentFireState = EFiringState::Reloading;
 public:
 	void AimAt(FVector WorldHitLocation);
 
@@ -39,6 +40,8 @@ public:
 	void Initialize(UTankTurret* TurretToSet, UTankBarrel* BarrelToSet);
 
 private:
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
+
 	UTankBarrel* Barrel = nullptr;
 	UTankTurret* Turret = nullptr;
 
@@ -49,7 +52,13 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Firing", meta = (AllowPrivateAccess = "True"))
 	double ReloadTimeInSeconds = 2.0;
 
-	double LastFireTime = -10.0;
+	double LastFireTime = 0.0;
+
+	FVector AimDirection = FVector(0.0f);
+
+	virtual void BeginPlay() override;
+
+	bool IsBarrelMoving() const;
 
 	void MoveBarrelTowards(FVector DesiredDirection);
 };
