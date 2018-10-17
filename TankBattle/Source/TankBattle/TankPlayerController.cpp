@@ -3,6 +3,7 @@
 #include "TankPlayerController.h"
 #include "Tank.h"
 #include "Engine/World.h"
+#include "TankAimingComponent.h"
 ATank* ATankPlayerController::GetControlledTank() const
 {
 	return Cast<ATank>(GetPawn());
@@ -49,11 +50,14 @@ bool ATankPlayerController::GetLookDirection(FVector2D ScreenLocation, FVector& 
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+	auto aimer = GetControlledTank()->FindComponentByClass<UTankAimingComponent>();
+	if (ensure(aimer))
+		FoundAimingComponent(aimer);
 }
 void ATankPlayerController::AimTowardsCrosshair()
 {
 	ATank* ControlledTank{ GetControlledTank() };
-	if (!ControlledTank)
+	if (!ensure(ControlledTank))
 	{
 		return;
 	}

@@ -28,7 +28,7 @@ void AProjectile::Tick(float DeltaTime)
 
 void AProjectile::Launch(float Speed)
 {
-	if (!ProjectileMovementComponent)
+	if (!ensure(ProjectileMovementComponent))
 	{
 		return;
 	}

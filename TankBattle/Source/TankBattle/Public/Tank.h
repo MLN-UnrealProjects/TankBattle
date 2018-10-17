@@ -7,7 +7,6 @@
 #include "Tank.generated.h"
 
 class UTankBarrel;
-class UTankTurret;
 class UTankAimingComponent;
 class AProjectile;
 class UTankMovementComponent;
@@ -19,12 +18,9 @@ class TANKBATTLE_API ATank : public APawn
 public:
 	void AimAt(FVector HitLocation);
 
-	UFUNCTION(BlueprintCallable, Category = Firing)
+	UFUNCTION(BlueprintCallable, Category = "Firing")
 	void Fire();
-	UFUNCTION(BlueprintCallable, Category = Setup)
-	void SetBarrelReference(UTankBarrel* BarrelToSet);
-	UFUNCTION(BlueprintCallable, Category = Setup)
-	void SetTurretReference(UTankTurret* TurretToSet);
+
 protected:
 
 	UPROPERTY(BlueprintReadOnly)
@@ -40,18 +36,18 @@ private:
 	virtual void BeginPlay() override;
 
 	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	//virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UPROPERTY(EditDefaultsOnly, Category = Firing, meta = (AllowPrivateAccess = "True"))
-		float LaunchSpeed = 100000.0f; //TODO: find sensible speed
+	UPROPERTY(EditDefaultsOnly, Category = "Firing", meta = (AllowPrivateAccess = "True"))
+	float LaunchSpeed = 100000.0f; //TODO: find sensible speed
 
-	UPROPERTY(EditDefaultsOnly, Category = Setup, meta = (AllowPrivateAccess = "True"))
-		TSubclassOf<AProjectile> ProjectileBlueprint = nullptr; //This is another way of saying UClass* ProjectileBlueprint, but instead of allowing any type of UClass it requests specifically a given type
+	UPROPERTY(EditDefaultsOnly, Category = "Setup", meta = (AllowPrivateAccess = "True"))
+	TSubclassOf<AProjectile> ProjectileBlueprint = nullptr; //This is another way of saying UClass* ProjectileBlueprint, but instead of allowing any type of UClass it requests specifically a given type
 
 	UTankBarrel* Barrel = nullptr;
 
-	UPROPERTY(EditDefaultsOnly, Category = Firing, meta = (AllowPrivateAccess = "True"))
-		float ReloadTimeInSeconds = 1.0f;
+	UPROPERTY(EditDefaultsOnly, Category = "Firing", meta = (AllowPrivateAccess = "True"))
+	float ReloadTimeInSeconds = 1.0f;
 
 	double LastFireTime = 0.0;
 };

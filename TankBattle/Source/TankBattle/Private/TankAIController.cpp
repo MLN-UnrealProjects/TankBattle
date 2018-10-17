@@ -17,11 +17,11 @@ void ATankAIController::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	ATank* Player{ (Cast<ATankPlayerController>(GetWorld()->GetFirstPlayerController()))->GetControlledTank() };
-	if (!Player)
+	if (!ensure(Player))
 		return;
 
 	ATank* MyTank{ Cast<ATank>(GetPawn()) };
-	if (!MyTank)
+	if (!ensure(MyTank))
 		return;
 
 	EPathFollowingRequestResult::Type Result{ MoveToActor(Player, AcceptanceRadius) };

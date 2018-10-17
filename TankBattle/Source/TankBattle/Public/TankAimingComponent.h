@@ -30,16 +30,15 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(BlueprintReadOnly , Category = "State")
-	EFiringState CurrentFireState = EFiringState::Reloading;
+	EFiringState CurrentFireState = EFiringState::Locked;
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	void AimAt(FVector WorldHitLocation, float LaunchSpeed);
 
-	void SetBarrelReference(UTankBarrel* BarrelToSet);
-
-	void SetTurretReference(UTankTurret* TurretToSet);
+	UFUNCTION(BlueprintCallable)
+	void Initialize(UTankTurret* TurretToSet, UTankBarrel* BarrelToSet);
 
 private:
 	UTankBarrel* Barrel = nullptr;
