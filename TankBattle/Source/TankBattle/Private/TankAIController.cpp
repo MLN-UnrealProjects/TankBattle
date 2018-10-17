@@ -1,11 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TankAIController.h"
-#include "Tank.h"
 #include "Engine/World.h"
-#include "TankPlayerController.h"
-#include "GameFramework/Actor.h"
-#include "Classes/Navigation/PathFollowingComponent.h"
+#include "TankAimingComponent.h"
 
 void ATankAIController::BeginPlay()
 {
@@ -16,16 +13,20 @@ void ATankAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	ATank* Player{ (Cast<ATankPlayerController>(GetWorld()->GetFirstPlayerController()))->GetControlledTank() };
+	APawn* Player{ GetWorld()->GetFirstPlayerController()->GetPawn() };
 	if (!ensure(Player))
 		return;
 
-	ATank* MyTank{ Cast<ATank>(GetPawn()) };
+	APawn* MyTank{ GetPawn() };
 	if (!ensure(MyTank))
 		return;
 
-	EPathFollowingRequestResult::Type Result{ MoveToActor(Player, AcceptanceRadius) };
+	UTankAimingComponent* AimingComponent{ MyTank->FindComponentByClass<UTankAimingComponent>() };
+	if (!ensure(AimingComponent))
+		return;
 
-	MyTank->AimAt(Player->GetActorLocation());
-	MyTank->Fire();
+	MoveToActor(Player, AcceptanceRadius);
+
+	AimingComponent->AimAt(Player->GetActorLocation());
+	AimingComponent->Fire();
 }

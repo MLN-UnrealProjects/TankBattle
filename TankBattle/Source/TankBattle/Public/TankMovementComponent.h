@@ -17,7 +17,7 @@ class TANKBATTLE_API UTankMovementComponent : public UNavMovementComponent
 	
 	
 public:
-	UFUNCTION(BlueprintCallable, Category = Input)
+	UFUNCTION(BlueprintCallable, Category = "Input")
 	//Performs a forward movement
 	void IntendMoveForward(float Throw);
 	UFUNCTION(BlueprintCallable, Category = "Input")

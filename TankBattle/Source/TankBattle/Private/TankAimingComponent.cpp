@@ -2,10 +2,12 @@
 
 #include "TankAimingComponent.h"
 #include "TankBarrel.h"
-#include "Components/ActorComponent.h"
+//#include "Components/ActorComponent.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
-#include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
+//#include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
 #include "TankTurret.h"
+#include "Projectile.h"
+#include "Engine/World.h"
 
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
@@ -18,25 +20,26 @@ UTankAimingComponent::UTankAimingComponent()
 }
 
 
-// Called when the game starts
-void UTankAimingComponent::BeginPlay()
+void UTankAimingComponent::Fire()
 {
-	Super::BeginPlay();
+	if (!ensure(ProjectileBlueprint && Barrel))
+	{
+		return;
+	}
 
-	// ...
+	double CurrentSeconds{ FPlatformTime::Seconds() };
+	bool IsReloaded{ CurrentSeconds - LastFireTime > ReloadTimeInSeconds };
+	if (!IsReloaded)
+	{
+		return;
+	}
 
+	LastFireTime = CurrentSeconds;
+
+	AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, Barrel->GetSocketTransform(FName{ "Projectile" }));
+	Projectile->Launch(LaunchSpeed);
 }
-
-
-// Called every frame
-void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
-}
-
-void UTankAimingComponent::AimAt(FVector Location, float LaunchSpeed)
+void UTankAimingComponent::AimAt(FVector Location)
 {
 	if (!ensure(Barrel))
 	{
