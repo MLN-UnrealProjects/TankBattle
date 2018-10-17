@@ -93,7 +93,6 @@ void UTankAimingComponent::Initialize(UTankTurret * TurretToSet, UTankBarrel* Ba
 void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	UE_LOG(LogTemp, Warning, TEXT("%d , %d , %d"), FPlatformTime::Seconds(), LastFireTime, ReloadTimeInSeconds);
 
 	if (FPlatformTime::Seconds() - LastFireTime < ReloadTimeInSeconds)
 		CurrentFireState = EFiringState::Reloading;
