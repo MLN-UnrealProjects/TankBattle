@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/StaticMeshComponent.h"
 #include "TankTrack.generated.h"
-
+struct FActorComponentTickFunction;
 /**
  *
  */
@@ -20,10 +20,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void SetThrottle(float Throttle);
 
+
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = "true"), Category = "Movement")
-	float TrackMaxDrivingForce = 400000.0f;
+	float TrackMaxDrivingForce = 40000000.0f;
 
 private:
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+	virtual void BeginPlay() override;
+	void ApplySidewaysForce();
+	void DriveTrack();
 
-	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
+	float CurrentThrottle = 0.0f;
 };
