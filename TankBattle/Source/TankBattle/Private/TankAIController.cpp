@@ -18,7 +18,7 @@ void ATankAIController::Tick(float DeltaTime)
 		return;
 
 	APawn* MyPawn{ GetPawn() };
-	if (!ensure(MyPawn))
+	if (!MyPawn)
 		return;
 
 	UTankAimingComponent* AimingComponent{ MyPawn->FindComponentByClass<UTankAimingComponent>() };
