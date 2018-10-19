@@ -31,7 +31,7 @@ public:
 	EFiringState GetFiringState() const;
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	int AmmoLeft = 10;
+	int32 AmmoLeft = 10;
 
 	UPROPERTY(BlueprintReadOnly, Category = "State")
 	EFiringState CurrentFireState = EFiringState::Reloading;
@@ -42,7 +42,7 @@ public:
 	void Initialize(UTankTurret* TurretToSet, UTankBarrel* BarrelToSet);
 
 	UFUNCTION(BlueprintCallable, Category = "Firing")
-	int GetAmmoLeft() const;
+	int32 GetAmmoLeft() const;
 
 private:
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;

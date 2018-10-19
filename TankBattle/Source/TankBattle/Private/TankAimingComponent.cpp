@@ -98,7 +98,7 @@ void UTankAimingComponent::Initialize(UTankTurret * TurretToSet, UTankBarrel* Ba
 	Barrel = BarrelToSet;
 }
 
-int UTankAimingComponent::GetAmmoLeft() const
+int32 UTankAimingComponent::GetAmmoLeft() const
 {
 	return AmmoLeft;
 }

@@ -6,12 +6,13 @@
 #include "GameFramework/Actor.h"
 #include "Projectile.generated.h"
 class UProjectileMovementComponent;
+class UParticleSystemComponent;
 UCLASS()
 class TANKBATTLE_API AProjectile : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	AProjectile();
 
@@ -19,13 +20,17 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	void Launch(float Speed);
 
-protected:
+private:
 	UProjectileMovementComponent* ProjectileMovementComponent = nullptr;
+	UPROPERTY(VisibleAnywhere, Category = "Setup", meta = (AllowPrivateAccess = "true"))
+	UStaticMeshComponent* CollisionMesh = nullptr;
+	UPROPERTY(VisibleAnywhere , Category = "Setup", meta = (AllowPrivateAccess = "true"))
+	UParticleSystemComponent* LaunchBlast = nullptr;
 
 };
