@@ -30,3 +30,23 @@ ATank::ATank() //: TankAimingComponent{ CreateDefaultSubobject<UTankAimingCompon
 //{
 //	Super::SetupPlayerInputComponent(PlayerInputComponent);
 //}
+float ATank::GetHealthPercentage() const
+{
+	if (CurrentHealth <= 0)
+		return 0.0f;
+	return (static_cast<float>(CurrentHealth) / static_cast<float>(StartingHealth));
+}
+float ATank::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
+{
+	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	int32 DamageToApply{ FMath::Clamp<int32>(FPlatformMath::RoundToInt(DamageAmount), 0, CurrentHealth) };
+
+	CurrentHealth -= DamageToApply;
+	if (CurrentHealth <= 0)
+	{
+		//TODO: Die
+	}
+
+	return DamageToApply;
+}

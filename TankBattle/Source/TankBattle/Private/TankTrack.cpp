@@ -42,7 +42,7 @@ void UTankTrack::ApplySidewaysForce()
 
 	auto SlippageSpeed{ FVector::DotProduct(Right,GetComponentVelocity()) };
 
-	auto CorrectionAcceleration{ -(SlippageSpeed / GetWorld()->GetDeltaSeconds()) * Right * 0.5f };
+	auto CorrectionAcceleration{ -(SlippageSpeed / GetWorld()->GetDeltaSeconds()) * Right };
 
 	auto Owner{ GetOwner() };
 	if (!ensure(Owner))

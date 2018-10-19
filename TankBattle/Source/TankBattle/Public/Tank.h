@@ -12,8 +12,15 @@ class TANKBATTLE_API ATank : public APawn
 {
 	GENERATED_BODY()
 
-
+public:
+	//Returns current health as percentage of starting health from 0 to 1
+	UFUNCTION(BlueprintPure, Category = "Health")
+	float GetHealthPercentage() const;
 
 private:
 	ATank();
+	UPROPERTY(EditDefaultsOnly, Category = "Setup" , meta = (AllowPrivateAccess = "true"))
+	int32 StartingHealth = 200;
+	int32 CurrentHealth = StartingHealth;
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const & DamageEvent, class AController * EventInstigator, AActor * DamageCauser) override;
 };

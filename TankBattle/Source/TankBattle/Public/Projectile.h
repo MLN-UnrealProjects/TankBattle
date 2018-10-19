@@ -7,6 +7,7 @@
 #include "Projectile.generated.h"
 class UProjectileMovementComponent;
 class UParticleSystemComponent;
+class URadialForceComponent;
 UCLASS()
 class TANKBATTLE_API AProjectile : public AActor
 {
@@ -34,6 +35,14 @@ private:
 	UParticleSystemComponent* LaunchBlast = nullptr;
 	UPROPERTY(VisibleAnywhere, Category = "Setup", meta = (AllowPrivateAccess = "true"))
 	UParticleSystemComponent* ImpactBlast = nullptr;
+	UPROPERTY(VisibleAnywhere, Category = "Setup", meta = (AllowPrivateAccess = "true"))
+	URadialForceComponent* ExplosionForce = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "Hit", meta = (AllowPrivateAccess = "true"))
+	float DestroyDelay = 3.0f;
+	UPROPERTY(EditDefaultsOnly, Category = "Hit", meta = (AllowPrivateAccess = "true"))
+	float ProjectileDamage = 20.0f;
+
+	void DestroyProjectile();
 
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
