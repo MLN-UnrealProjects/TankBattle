@@ -34,11 +34,11 @@ bool UTankAimingComponent::IsBarrelMoving() const
 }
 void UTankAimingComponent::Fire()
 {
-	if (!ensure(ProjectileBlueprint && Barrel) || CurrentFireState == EFiringState::Reloading)
+	if (AmmoLeft <= 0 || !ensure(ProjectileBlueprint && Barrel) || CurrentFireState == EFiringState::Reloading)
 	{
 		return;
 	}
-
+	AmmoLeft--;
 	LastFireTime = FPlatformTime::Seconds();
 
 	AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, Barrel->GetSocketTransform(FName{ "Projectile" }));
@@ -57,6 +57,10 @@ void UTankAimingComponent::AimAt(FVector Location)
 	{
 		MoveBarrelTowards(OutLaunchVelocity.GetSafeNormal());
 	}
+}
+EFiringState UTankAimingComponent::GetFiringState() const
+{
+	return CurrentFireState;
 }
 void UTankAimingComponent::MoveBarrelTowards(FVector DesiredDirection)
 {
@@ -92,6 +96,11 @@ void UTankAimingComponent::Initialize(UTankTurret * TurretToSet, UTankBarrel* Ba
 {
 	Turret = TurretToSet;
 	Barrel = BarrelToSet;
+}
+
+int UTankAimingComponent::GetAmmoLeft() const
+{
+	return AmmoLeft;
 }
 
 void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)

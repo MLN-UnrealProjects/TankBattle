@@ -12,8 +12,6 @@ UTankTrack::UTankTrack()
 void UTankTrack::SetThrottle(float Throttle)
 {
 	CurrentThrottle = FMath::Clamp<float>(CurrentThrottle + Throttle, -1.0f, 1.0f);
-	//AddForce(ForceApplied);
-	//UE_LOG(LogTemp, Warning, TEXT("%s"), *ForceApplied.ToString());
 }
 
 void UTankTrack::DriveTrack()
@@ -27,8 +25,8 @@ void UTankTrack::DriveTrack()
 
 void UTankTrack::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
 {
-	DriveTrack();
 	ApplySidewaysForce();
+	DriveTrack();
 	CurrentThrottle = 0.0f;
 }
 
@@ -44,7 +42,7 @@ void UTankTrack::ApplySidewaysForce()
 
 	auto SlippageSpeed{ FVector::DotProduct(Right,GetComponentVelocity()) };
 
-	auto CorrectionAcceleration{ -(SlippageSpeed / GetWorld()->GetDeltaSeconds()) * Right };
+	auto CorrectionAcceleration{ -(SlippageSpeed / GetWorld()->GetDeltaSeconds()) * Right * 0.5f };
 
 	auto Owner{ GetOwner() };
 	if (!ensure(Owner))
