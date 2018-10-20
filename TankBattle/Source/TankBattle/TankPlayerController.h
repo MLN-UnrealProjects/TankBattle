@@ -17,19 +17,17 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
 	void FoundAimingComponent(UTankAimingComponent* AimCompRef);
 public:
-	UFUNCTION(BlueprintCallable, Category = "Setup")
-	UTankAimingComponent* GetControlledAimingComponent() const;
 
 	void AimTowardsCrosshair();
 	virtual void Tick(float DeltaTime) override;
 	virtual void BeginPlay() override;
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "Setup")
-		float CrossHairXLocation = 0.5f;
+	float CrossHairXLocation = 0.5f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "Setup")
-		float CrossHairYLocation = 0.33333f;
+	float CrossHairYLocation = 0.33333f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "Setup")
-		float LineTraceRange = 1000000.0f;
+	float LineTraceRange = 1000000.0f;
 
 	bool GetLookDirection(FVector2D ScreenLocation, FVector& LookDirection) const;
 	bool GetSightRayHitLocation(FVector& OutHitLocation) const;

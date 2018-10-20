@@ -4,15 +4,6 @@
 #include "Engine/World.h"
 #include "TankAimingComponent.h"
 #include "Tank.h"
-UTankAimingComponent* ATankPlayerController::GetControlledAimingComponent() const
-{
-	APawn* MyPawn{ GetPawn() };
-
-	if (!ensure(MyPawn))
-		return nullptr;
-
-	return  MyPawn->FindComponentByClass<UTankAimingComponent>();
-}
 
 void ATankPlayerController::Tick(float DeltaTime)
 {
@@ -53,7 +44,7 @@ void ATankPlayerController::SetPawn(APawn * InPawn)
 	if (InPawn)
 	{
 		auto PossessedTank{ Cast<ATank>(InPawn) };
-		if (ensure(PossessedTank))
+		if (PossessedTank)
 		{
 			PossessedTank->OnDeath.AddUniqueDynamic(this, &ATankPlayerController::OnDeath);
 		}
@@ -71,13 +62,27 @@ bool ATankPlayerController::GetLookDirection(FVector2D ScreenLocation, FVector& 
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-	auto aimer = GetControlledAimingComponent();
-	if (ensure(aimer))
-		FoundAimingComponent(aimer);
+
+	APawn* MyPawn{ GetPawn() };
+	if (!MyPawn)
+		return;
+
+	UTankAimingComponent* aimer{ MyPawn->FindComponentByClass<UTankAimingComponent>() };
+	if (!aimer)
+		return;
+
+	FoundAimingComponent(aimer);
 }
 void ATankPlayerController::AimTowardsCrosshair()
 {
-	UTankAimingComponent* aimer{ GetControlledAimingComponent() };
+	APawn* MyPawn{ GetPawn() };
+	if (!MyPawn)
+		return;
+
+	UTankAimingComponent* aimer{ MyPawn->FindComponentByClass<UTankAimingComponent>() };
+	if (!aimer)
+		return;
+
 	FVector HitLocation{ 0.0f,0.0f,0.0f };
 
 	if (GetSightRayHitLocation(HitLocation))

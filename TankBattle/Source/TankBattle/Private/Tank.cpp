@@ -2,21 +2,6 @@
 
 #include "Tank.h"
 
-//void ATank::SetBarrelReference(UTankBarrel* BarrelToSet)
-//{
-//	if (ensure(TankAimingComponent))
-//	{
-//		TankAimingComponent->SetBarrelReference(BarrelToSet);
-//
-//			Barrel = BarrelToSet;
-//	}
-//}
-//
-//void ATank::SetTurretReference(UTankTurret * TurretToSet)
-//{
-//	if (ensure(TankAimingComponent))
-//		TankAimingComponent->SetTurretReference(TurretToSet);
-//}
 // Sets default values
 ATank::ATank() //: TankAimingComponent{ CreateDefaultSubobject<UTankAimingComponent>(FName{"Aiming Component"}) }
 {
@@ -29,11 +14,6 @@ void ATank::BeginPlay()
 	CurrentHealth = StartingHealth;
 }
 
-// Called to bind functionality to input
-//void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-//{
-//	Super::SetupPlayerInputComponent(PlayerInputComponent);
-//}
 float ATank::GetHealthPercentage() const
 {
 	if (CurrentHealth <= 0)
