@@ -18,7 +18,9 @@ protected:
 	float AcceptanceRadius = 8000.0f;
 
 private:
+	virtual void SetPawn(APawn* PossessedPawn) override;
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
-
+	UFUNCTION()
+	void OnDeath();
 };

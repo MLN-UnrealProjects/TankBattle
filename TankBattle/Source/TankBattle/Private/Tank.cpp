@@ -23,7 +23,11 @@ ATank::ATank() //: TankAimingComponent{ CreateDefaultSubobject<UTankAimingCompon
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 }
-
+void ATank::BeginPlay()
+{
+	Super::BeginPlay();
+	CurrentHealth = StartingHealth;
+}
 
 // Called to bind functionality to input
 //void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -45,7 +49,7 @@ float ATank::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AC
 	CurrentHealth -= DamageToApply;
 	if (CurrentHealth <= 0)
 	{
-		//TODO: Die
+		OnDeath.Broadcast();
 	}
 
 	return DamageToApply;
