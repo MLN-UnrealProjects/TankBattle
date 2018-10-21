@@ -22,7 +22,7 @@ void USpawnPoint::BeginPlay()
 
 	//SpawnActor will call all initialization functions (ctor, begin play and same for BP). The SpawnDeferredActor will only call the c++ ctor (this must be followed by UGameplayStatics::FinishSpawningActor
 	//auto SpawnedActor{ GetWorld()->SpawnActor<AActor>(ActorToSpawn) };
-	AActor* SpawnedActor{ (GetWorld()->SpawnActorDeferred<AActor>(ActorToSpawn,FTransform::Identity,nullptr,nullptr,ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn)) };
+	SpawnedActor = (GetWorld()->SpawnActorDeferred<AActor>(ActorToSpawn, FTransform::Identity, nullptr, nullptr, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn));
 	if (SpawnedActor)
 	{
 		SpawnedActor->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
@@ -30,12 +30,8 @@ void USpawnPoint::BeginPlay()
 	UGameplayStatics::FinishSpawningActor(SpawnedActor, FTransform::Identity);
 }
 
-
-// Called every frame
-void USpawnPoint::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+AActor * USpawnPoint::GetSpawnedActor() const
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
+	return SpawnedActor;
 }
 

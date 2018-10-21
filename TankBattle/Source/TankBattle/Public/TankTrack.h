@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/StaticMeshComponent.h"
 #include "TankTrack.generated.h"
+class ASprungWheel;
 /**
  *
  */
@@ -24,11 +25,10 @@ public:
 	float TrackMaxDrivingForce = 40000000.0f;
 
 private:
-	UFUNCTION()
-	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
-	virtual void BeginPlay() override;
-	void ApplySidewaysForce();
-	void DriveTrack();
-
-	float CurrentThrottle = 0.0f;
+	//UFUNCTION()
+	//void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+	//virtual void BeginPlay() override;
+	//void ApplySidewaysForce();
+	void DriveTrack(float CurrentThrottle);
+	TArray<ASprungWheel*> GetWheels() const;
 };

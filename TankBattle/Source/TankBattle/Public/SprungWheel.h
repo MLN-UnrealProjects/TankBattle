@@ -24,7 +24,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	void AddDrivingForce(float ForceMagnitude);
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Setup", meta = (AllowPrivateAccess = "true"))
 	UPhysicsConstraintComponent* MassAxelConstraint = nullptr;
@@ -35,5 +35,5 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Setup", meta = (AllowPrivateAccess = "true"))
 	USphereComponent* Wheel = nullptr;
 	UPROPERTY(VisibleAnywhere, Category = "Setup", meta = (AllowPrivateAccess = "true"))
-	USphereComponent* Axel = nullptr;
+	USphereComponent* Axle = nullptr;
 };

@@ -11,25 +11,25 @@ ASprungWheel::ASprungWheel() :
 	AxelWheelConstraint{ CreateDefaultSubobject<UPhysicsConstraintComponent>(FName{"Axel-Wheel Constraint Component"}) },
 	//Mass{ CreateDefaultSubobject<UStaticMeshComponent>(FName{"Mass"}) },
 	Wheel{ CreateDefaultSubobject<USphereComponent>(FName{"Wheel"}) },
-	Axel{ CreateDefaultSubobject<USphereComponent>(FName{"Axel"}) }
+	Axle{ CreateDefaultSubobject<USphereComponent>(FName{"Axel"}) }
 {
 	PrimaryActorTick.bCanEverTick = true;
 
 	//Constraint used as root because it does not simulate physics itself. If either mass or wheel were to be roots it is going to actually "pop out" of the hiearchy
 	SetRootComponent(MassAxelConstraint);
 
-	Axel->SetupAttachment(MassAxelConstraint);
-	AxelWheelConstraint->SetupAttachment(Axel);
-	Wheel->SetupAttachment(Axel);
+	Axle->SetupAttachment(MassAxelConstraint);
+	AxelWheelConstraint->SetupAttachment(Axle);
+	Wheel->SetupAttachment(Axle);
 	//Mass->SetupAttachment(MassWheelConstraint);
 
 	//Mass->SetSimulatePhysics(true);
 	Wheel->SetSimulatePhysics(true);
-	Axel->SetSimulatePhysics(true);
+	Axle->SetSimulatePhysics(true);
 
-	Axel->SetCollisionProfileName(FName{ "OverlapAll" });
+	Axle->SetCollisionProfileName(FName{ "OverlapAll" });
 	Wheel->SetCollisionProfileName(FName{ "BlockAllDynamic" });
-	Axel->SetCollisionEnabled(ECollisionEnabled::Type::QueryAndPhysics);
+	Axle->SetCollisionEnabled(ECollisionEnabled::Type::QueryAndPhysics);
 
 	//MassWheelConstraint->ComponentName1 = FConstrainComponentPropName{ "Mass" };
 	//MassWheelConstraint->ComponentName2 = FConstrainComponentPropName{ "Wheel" };
@@ -73,8 +73,8 @@ void ASprungWheel::BeginPlay()
 		UPrimitiveComponent* ParentRootForConstraint{ Cast<UPrimitiveComponent>(Parent->GetRootComponent()) };
 		if ((ParentRootForConstraint))
 		{
-			MassAxelConstraint->SetConstrainedComponents(ParentRootForConstraint, NAME_None, Axel, NAME_None);
-			AxelWheelConstraint->SetConstrainedComponents(Axel, NAME_None, Wheel, NAME_None);
+			MassAxelConstraint->SetConstrainedComponents(ParentRootForConstraint, NAME_None, Axle, NAME_None);
+			AxelWheelConstraint->SetConstrainedComponents(Axle, NAME_None, Wheel, NAME_None);
 		}
 	}
 }
@@ -84,5 +84,10 @@ void ASprungWheel::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ASprungWheel::AddDrivingForce(float ForceMagnitude)
+{
+	Wheel->AddForce(Axle->GetForwardVector() * ForceMagnitude);
 }
 

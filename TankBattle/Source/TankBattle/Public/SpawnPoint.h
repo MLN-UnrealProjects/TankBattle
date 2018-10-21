@@ -21,10 +21,10 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
+	AActor* GetSpawnedActor() const;
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<AActor> ActorToSpawn = nullptr;
+	UPROPERTY() //This allows the garbage collector to track this property
+	AActor* SpawnedActor = nullptr;
 };
