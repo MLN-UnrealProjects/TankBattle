@@ -2,7 +2,8 @@
 
 #include "SpawnPoint.h"
 #include "Engine/World.h"
-
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "Runtime/Engine/Classes/GameFramework/Actor.h"
 // Sets default values for this component's properties
 USpawnPoint::USpawnPoint()
 {
@@ -19,11 +20,14 @@ void USpawnPoint::BeginPlay()
 {
 	Super::BeginPlay();
 
-	auto SpawnedActor{ GetWorld()->SpawnActor<AActor>(ActorToSpawn) };
+	//SpawnActor will call all initialization functions (ctor, begin play and same for BP). The SpawnDeferredActor will only call the c++ ctor (this must be followed by UGameplayStatics::FinishSpawningActor
+	//auto SpawnedActor{ GetWorld()->SpawnActor<AActor>(ActorToSpawn) };
+	AActor* SpawnedActor{ (GetWorld()->SpawnActorDeferred<AActor>(ActorToSpawn,FTransform::Identity,nullptr,nullptr,ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn)) };
 	if (SpawnedActor)
 	{
 		SpawnedActor->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
 	}
+	UGameplayStatics::FinishSpawningActor(SpawnedActor, FTransform::Identity);
 }
 
 

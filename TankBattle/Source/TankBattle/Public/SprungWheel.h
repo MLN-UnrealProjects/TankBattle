@@ -6,7 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "SprungWheel.generated.h"
 class UPhysicsConstraintComponent;
-class UStaticMeshComponent;
+class USphereComponent;
+//class UStaticMeshComponent;
 UCLASS()
 class TANKBATTLE_API ASprungWheel : public AActor
 {
@@ -26,9 +27,13 @@ public:
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Setup", meta = (AllowPrivateAccess = "true"))
-	UPhysicsConstraintComponent* MassWheelConstraint = nullptr;
+	UPhysicsConstraintComponent* MassAxelConstraint = nullptr;
 	UPROPERTY(VisibleAnywhere, Category = "Setup", meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* Mass = nullptr;
+	UPhysicsConstraintComponent* AxelWheelConstraint = nullptr;
+	//UPROPERTY(VisibleAnywhere, Category = "Setup", meta = (AllowPrivateAccess = "true"))
+	//UStaticMeshComponent* Mass = nullptr;
 	UPROPERTY(VisibleAnywhere, Category = "Setup", meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* Wheel = nullptr;
+	USphereComponent* Wheel = nullptr;
+	UPROPERTY(VisibleAnywhere, Category = "Setup", meta = (AllowPrivateAccess = "true"))
+	USphereComponent* Axel = nullptr;
 };
