@@ -5,6 +5,7 @@
 #include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
 #include "Runtime/Engine/Classes/Engine/EngineTypes.h"
 #include "Runtime/Engine/Classes/Components/SphereComponent.h"
+#include "Engine/World.h"
 // Sets default values
 ASprungWheel::ASprungWheel() :
 	MassAxelConstraint{ CreateDefaultSubobject<UPhysicsConstraintComponent>(FName{"Mass-Axel Constraint Component"}) },
@@ -14,6 +15,7 @@ ASprungWheel::ASprungWheel() :
 	Axle{ CreateDefaultSubobject<USphereComponent>(FName{"Axel"}) }
 {
 	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.TickGroup = ETickingGroup::TG_PostPhysics;
 
 	//Constraint used as root because it does not simulate physics itself. If either mass or wheel were to be roots it is going to actually "pop out" of the hiearchy
 	SetRootComponent(MassAxelConstraint);
@@ -67,6 +69,8 @@ void ASprungWheel::BeginPlay()
 {
 	Super::BeginPlay();
 
+	PrimaryActorTick.TickGroup = ETickingGroup::TG_PostPhysics;
+
 	AActor* Parent{ GetAttachParentActor() };
 	if ((Parent))
 	{
@@ -77,6 +81,8 @@ void ASprungWheel::BeginPlay()
 			AxelWheelConstraint->SetConstrainedComponents(Axle, NAME_None, Wheel, NAME_None);
 		}
 	}
+	Wheel->SetNotifyRigidBodyCollision(true);
+	Wheel->OnComponentHit.AddUniqueDynamic(this, &ASprungWheel::OnHit);
 }
 
 // Called every frame
@@ -84,10 +90,19 @@ void ASprungWheel::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (ensure(GetWorld()->TickGroup == ETickingGroup::TG_PostPhysics))
+	{
+		CurrentForce = 0.0f;
+	}
 }
 
 void ASprungWheel::AddDrivingForce(float ForceMagnitude)
 {
-	Wheel->AddForce(Axle->GetForwardVector() * ForceMagnitude);
+	CurrentForce += ForceMagnitude;
+}
+
+void ASprungWheel::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, FVector NormalImpulse, const FHitResult & Hit)
+{
+	Wheel->AddForce(Axle->GetForwardVector() * CurrentForce);
 }
 

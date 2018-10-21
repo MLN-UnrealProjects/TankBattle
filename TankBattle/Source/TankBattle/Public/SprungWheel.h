@@ -12,8 +12,8 @@ UCLASS()
 class TANKBATTLE_API ASprungWheel : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	ASprungWheel();
 
@@ -21,7 +21,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	void AddDrivingForce(float ForceMagnitude);
@@ -36,4 +36,9 @@ private:
 	USphereComponent* Wheel = nullptr;
 	UPROPERTY(VisibleAnywhere, Category = "Setup", meta = (AllowPrivateAccess = "true"))
 	USphereComponent* Axle = nullptr;
+
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent*  HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	float CurrentForce = 0.0f;
 };
